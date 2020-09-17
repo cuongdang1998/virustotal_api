@@ -41,17 +41,16 @@ class _HomePageState extends State<HomePage> {
             case ConnectionState.waiting:
               return Container(child: Center(child: CircularProgressIndicator(),));
             case ConnectionState.active:
-              var a= snapshot.data;
-              print(a.length);
+              //print(snapshot.data.toString());
               return snapshot.hasError ? Container(child: Center(child: Text("Error"),)):
                   ListView.builder(
-                    itemCount: a.length,
+                    itemCount: snapshot.data.length,
                     itemBuilder: (context, index){
                       return Container(
                         padding: EdgeInsets.all(20),
                         child: Column(
                           children: [
-                            Text(a[index].keyscan, style: Theme.of(context).textTheme.headline5,)
+                            Text(snapshot.data[index].keyscan, style: Theme.of(context).textTheme.headline5,)
                           ],
                         ),
                       );

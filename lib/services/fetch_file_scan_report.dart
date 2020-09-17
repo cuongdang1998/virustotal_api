@@ -23,10 +23,10 @@ class FetchFileScanReport{
     if(response.statusCode==200){
       var a=FileScanReport.fromJson(response.data);
       for(var i in a.scans.values.toList()){
-        print(i.keyscan);
+        //print(i.keyscan);
         list.add(i);
       }
-      print(list);
+      //print(list);
       //Future.delayed(Duration(seconds: 5));
       return list;
     }
