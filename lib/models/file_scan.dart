@@ -1,4 +1,6 @@
-class Scan {
+import 'package:equatable/equatable.dart';
+
+class Scan extends Equatable{
   Scan({
     this.detected,
     this.version,
@@ -7,11 +9,11 @@ class Scan {
     this.keyscan
   });
 
-  bool detected;
-  String version;
-  String result;
-  String update;
-  String keyscan;
+  final bool detected;
+  final String version;
+  final String result;
+  final String update;
+  final String keyscan;
 
   factory Scan.fromJson(String keyScan,Map<String, dynamic> json) => Scan(
     keyscan: keyScan,
@@ -27,4 +29,11 @@ class Scan {
     "result": result == null ? null : result,
     "update": update,
   };
+  @override
+  String toString() {
+    return "Name: ${this.keyscan} result: ${this.result} detected: ${this.detected} version ${this.version}";
+  }
+  @override
+  // TODO: implement props
+  List<Object> get props => [];
 }
