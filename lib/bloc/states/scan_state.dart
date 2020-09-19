@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:virus_total_api/models/file_scan.dart';
+import 'package:virus_total_api/models/file_scan_report.dart';
 
 abstract class ScanState extends Equatable{
   @override

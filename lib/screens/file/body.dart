@@ -1,66 +1,127 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:virus_total_api/blocs/scan_bloc.dart';
-import 'package:virus_total_api/events/scan_event.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:virus_total_api/bloc/blocs/scan_bloc_file.dart';
+import 'package:virus_total_api/bloc/events/scan_event.dart';
+import 'package:virus_total_api/screens/components/input_container.dart';
+import 'package:virus_total_api/screens/components/title_text.dart';
 import 'package:virus_total_api/screens/file/scan_card_list.dart';
 import 'package:virus_total_api/services/fetch_file_scan_report.dart';
-import 'package:virus_total_api/states/scan_state.dart';
+import 'package:virus_total_api/size_config.dart';
+import 'package:virus_total_api/bloc/states/scan_state.dart';
+
 class Body extends StatefulWidget {
   @override
   _BodyState createState() => _BodyState();
 }
 
 class _BodyState extends State<Body> {
-  ScanBloc _scanbloc;
+  ScanFileBloc _scanfilebloc;
+  var defaultSize=SizeConfig.defaultSize;
+  final inputFileController = TextEditingController();
   @override
   void initState() {
     super.initState();
-    _scanbloc=BlocProvider.of<ScanBloc>(context);
+    _scanfilebloc=BlocProvider.of<ScanFileBloc>(context);
     //_scanbloc.add(FetchScanReportEvent());
   }
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          ListTile(
-            title: RaisedButton(
-              onPressed: (){
-                if(FetchFileScanReport.resource!=null) {
-                  _scanbloc.add(FetchScanReportEvent());
-                }else{
-                  Scaffold.of(context).showSnackBar(
-                    SnackBar(
-                      duration: Duration(seconds: 1),
-                      backgroundColor: Colors.blue,
-                      content: Text("Please input your file", style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20
-                      ),),
-                    )
-                  );
-                }
-              },
-              child: Text("Scan", style: TextStyle(color:Colors.white, fontWeight: FontWeight.bold),),
-              color: Colors.blue.withOpacity(.7),
-            ),
+      child: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: defaultSize*2.0, vertical: defaultSize*1.0),
+                child: TitleText(title: "Input your file",),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: defaultSize*2, vertical: defaultSize),
+                child: Row(
+                  children: [
+                    Expanded(child: InputContainer(hinttext: "Input file resource", myController: inputFileController,)),
+                    SizedBox(width: defaultSize/2,),
+                    IconButton(
+                      icon: SvgPicture.asset("assets/icons/scan.svg", width: defaultSize*2.5,),
+                      onPressed: (){
+                        var text=inputFileController.text;
+                        print(text);
+                        if(text=="" || text==null){
+                          Scaffold.of(context).showSnackBar(
+                              SnackBar(
+                                duration: Duration(seconds: 1),
+                                backgroundColor: Colors.blue,
+                                content: Text("Please input your file", style: TextStyle(
+                                    color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20
+                                ),),
+                              )
+                          );
+                        }else{
+                          _scanfilebloc.add(FetchScanReportEvent());
+                          //ScanFileBloc(InitialScanState());
+                          FetchFileScanReport.resource=text;
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: defaultSize*2.0, vertical: defaultSize*1.0),
+                child: TitleText(title: "File Scan Report",),
+              ),
+              BlocBuilder<ScanFileBloc, ScanState>(
+                  builder: (context, state){
+                    print(state);
+                    var currentState=state;
+                    if(currentState is InitialScanState){
+                      print(currentState);
+                      return Center(child: Image.asset("assets/gif/spinner.gif"),);
+                    }
+                    if(currentState is SucceededScanState){
+                      print(currentState);
+                      if(currentState.scans.isEmpty)
+                        return Center(child: Text("NO detected file information"),);
+                      return ScanCardList(scans: currentState.scans);
+                    }
+                    if(currentState is FailedScanState){
+                      print(currentState);
+                      return Center(
+                        child: Text("Please check your internet connection !\n"
+                            "Or your file input is NOT in dataset !"),
+                      );
+                      //AlertDialog(
+                      //       title: Text("Infomation", style: TextStyle(fontWeight: FontWeight.bold),),
+                      //       content: Text("Please check your internet connection !\n"
+                      //           "Or your file input is NOT in dataset !",
+                      //         style: TextStyle(fontSize: defaultSize*1.5),),
+                      //       contentPadding: EdgeInsets.symmetric(
+                      //           vertical: defaultSize*1.5, horizontal: defaultSize*4,
+                      //       ),
+                      //       actions: [
+                      //         Builder(
+                      //           builder: (context) {
+                      //             return FlatButton(
+                      //               onPressed: (){
+                      //                 Navigator.of(context, rootNavigator: false).pop();
+                      //               },
+                      //               child: Text("OK",
+                      //                 style: TextStyle(fontSize: defaultSize*2,
+                      //                     fontWeight: FontWeight.bold),
+                      //               ),
+                      //             );
+                      //           }
+                      //         )
+                      //       ],
+                      //     );
+                    }
+                  }
+              )
+            ],
           ),
-         BlocBuilder<ScanBloc, ScanState>(
-                builder: (context, state){
-                  var currentState=state;
-                  if(currentState is InitialScanState){
-                    return Center(child: Image.asset("assets/gif/spinner.gif"),);
-                  }
-                  if(currentState is SucceededScanState){
-                    if(currentState.scans.isEmpty)
-                      return Center(child: Text("NO detected file information"),);
-                    return ScanCardList(scans: currentState.scans);
-                  }
-                  if(currentState is FailedScanState){
-                    return Center(child: Text("Please check your intenet connection or your input file"),);
-                  }
-                }
-          ),
-        ],
+        ),
       ),
     );
   }
