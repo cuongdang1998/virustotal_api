@@ -19,12 +19,12 @@ class ScanFileBloc extends Bloc<ScanEvent,ScanState>{
             yield SucceededScanState(scans: scans);
             return;
           }
-          else if (currentState is SucceededScanState) {
+          else if(currentState is SucceededScanState) {
             yield SucceededScanState(scans: scans);
-          }
-          else{
+          }else{
             yield FailedScanState();
           }
+
         } catch(_){
           yield FailedScanState();
         }

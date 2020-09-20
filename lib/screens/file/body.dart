@@ -53,15 +53,23 @@ class _BodyState extends State<Body> {
                               SnackBar(
                                 duration: Duration(seconds: 1),
                                 backgroundColor: Colors.blue,
-                                content: Text("Please input your file", style: TextStyle(
-                                    color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20
-                                ),),
+                                content: ListTile(
+                                  leading: Icon(Icons.warning, color: Colors.white,),
+                                  title: Text("Please input your file !",
+                                    overflow: TextOverflow.ellipsis,
+                                    //maxLines: 2,
+                                    style: TextStyle(
+                                        color: Colors.white, fontWeight: FontWeight.bold, fontSize: defaultSize*1.8
+                                    ),
+
+                                  ),
+                                ),
                               )
                           );
                         }else{
+                          FetchFileScanReport.resource=text;
                           _scanfilebloc.add(FetchScanReportEvent());
                           //ScanFileBloc(InitialScanState());
-                          FetchFileScanReport.resource=text;
                         }
                       },
                     ),

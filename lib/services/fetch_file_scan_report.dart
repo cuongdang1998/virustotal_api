@@ -20,27 +20,20 @@ class FetchFileScanReport{
         throw('Response error');
       }
     }catch(ex){
-      print(ex.toString());
+      print("Error in fetchFileScanReport "+ex.toString());
     }
   }
   Future<List<Scan>> fetchFileScanList() async{
     try{
-      response=await dio.get(urlFileScanReport+"apikey="+keyApi+"&resource="+resource);
-      print(response);
+      var a =await fetchFileScanReport();
       List<Scan> list=List<Scan>();
-      if(response.statusCode==200){
-        var a=FileScanReport.fromJson(response.data);
-        for(var i in a.scans.values.toList()){
-          //print(i.keyscan);
-          list.add(i);
-        }
-        //print(list);
-        return list;
-      }else{
-        print("Response error");
-      }
+      for(var i in a.scans.values.toList()){
+            //print(i.keyscan);
+            list.add(i);
+          }
+      return list;
     }catch(e){
-      throw("=====Intenet error======"+e.toString());
+      throw("Error in fetchFileScanList"+e.toString());
     }
   }
 }
