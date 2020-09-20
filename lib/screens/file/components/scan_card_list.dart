@@ -8,7 +8,7 @@ class ScanCardList extends StatelessWidget {
   const ScanCardList({
     Key key, this.scans,
   }) : super(key: key);
-  final List<Scan> scans;
+  final List<FileScan> scans;
   @override
   Widget build(BuildContext context) {
     var defaultSize=SizeConfig.defaultSize;

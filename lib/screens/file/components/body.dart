@@ -67,7 +67,7 @@ class _BodyState extends State<Body> {
                               )
                           );
                         }else{
-                          FetchFileScanReport.resource=text;
+                          FetchFileScanReport.fileResource=text;
                           _scanfilebloc.add(FetchFileScanReportEvent());
                           //ScanFileBloc(InitialScanState());
                         }

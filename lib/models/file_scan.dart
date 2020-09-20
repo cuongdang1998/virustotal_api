@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-class Scan extends Equatable{
-  Scan({
+class FileScan extends Equatable{
+  FileScan({
     this.detected,
     this.version,
     this.result,
@@ -15,7 +15,7 @@ class Scan extends Equatable{
   final String update;
   final String keyscan;
 
-  factory Scan.fromJson(String keyScan,Map<String, dynamic> json) => Scan(
+  factory FileScan.fromJson(String keyScan, Map<String, dynamic> json) => FileScan(
     keyscan: keyScan,
     detected: json["detected"],
     version: json["version"] == null ? null : json["version"],

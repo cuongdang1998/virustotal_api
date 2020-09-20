@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:virus_total_api/models/file_scan.dart';
 import 'package:virus_total_api/models/url_scan.dart';
 
 class UrlScanReport extends Equatable{
@@ -16,7 +17,7 @@ class UrlScanReport extends Equatable{
     this.filescanId,
     this.positives,
     this.total,
-    this.scans,
+    this.urlScans,
   });
 
   final String scanId;
@@ -29,7 +30,8 @@ class UrlScanReport extends Equatable{
   final dynamic filescanId;
   final int positives;
   final int total;
-  final Map<String, dynamic> scans;
+  final Map<String, UrlScan> urlScans;
+
   factory UrlScanReport.fromJson(Map<String, dynamic> json) => UrlScanReport(
     scanId: json["scan_id"],
     resource: json["resource"],
@@ -41,6 +43,20 @@ class UrlScanReport extends Equatable{
     filescanId: json["filescan_id"],
     positives: json["positives"],
     total: json["total"],
-    scans: Map.from(json["scans"]).map((key, value) => MapEntry<String,dynamic>(key, UrlScan.fromJson(key, value)))
+    urlScans: Map.from(json["scans"]).map((key, value)
+    => MapEntry<String,UrlScan>(key, UrlScan.fromJson(key, value)))
   );
+  Map<String, dynamic> toJson() => {
+    "scan_id": scanId,
+    "resource": resource,
+    "url": url,
+    "response_code": responseCode,
+    "scan_date": scanDate.toIso8601String(),
+    "permalink": permalink,
+    "verbose_msg": verboseMsg,
+    "filescan_id": filescanId,
+    "positives": positives,
+    "total": total,
+    "scans": Map.from(urlScans).map((key, value) => MapEntry<String,dynamic>(key,value.toJson())),
+  };
 }

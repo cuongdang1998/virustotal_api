@@ -3,6 +3,9 @@ import 'package:virus_total_api/constants.dart';
 import 'package:virus_total_api/screens/components/alert_dialog.dart';
 import 'package:virus_total_api/screens/components/input_container.dart';
 import 'package:virus_total_api/screens/components/title_text.dart';
+import 'package:virus_total_api/services/fetch_file_scan_report.dart';
+import 'package:virus_total_api/services/fetch_url_scan_report.dart';
+import 'package:virus_total_api/services/push_url_scan.dart';
 
 import '../../../size_config.dart';
 class Body extends StatefulWidget {
@@ -45,7 +48,6 @@ class InputAndScanButton extends StatelessWidget {
   }) : super(key: key);
 
   final TextEditingController urlTextController;
-
   @override
   Widget build(BuildContext context) {
     var defaultSize=SizeConfig.defaultSize;
@@ -55,7 +57,7 @@ class InputAndScanButton extends StatelessWidget {
         Expanded(child: InputContainer(hinttext: "Input url link", myController: urlTextController,)),
         SizedBox(width: defaultSize,),
         FlatButton(
-          onPressed: (){
+          onPressed: () async{
             var text= urlTextController.text;
             print(text);
             if(text==""||text==null) {
@@ -67,6 +69,15 @@ class InputAndScanButton extends StatelessWidget {
                 buttontext: "OK",
                 size: defaultSize
               );
+            }else{
+              FetchFileScanReport scanReport=FetchFileScanReport();
+              FetchFileScanReport.fileResource=text;
+              var a =await scanReport.fetchFileScanList();
+              // FetchUrlScanReport scanReport= FetchUrlScanReport();
+              // FetchUrlScanReport.urlResource=text;
+              // var a= await scanReport.fetchUrlScanList();
+              print(a);
+              //print(a[0].keyname);
             }
           },
           shape: RoundedRectangleBorder(

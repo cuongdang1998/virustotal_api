@@ -11,6 +11,6 @@ class InitialScanState extends FileScanState{
 class FailedScanState extends FileScanState{
 }
 class SucceededScanState extends FileScanState{
-  final List<Scan> scans;
+  final List<FileScan> scans;
   SucceededScanState({this.scans});
 }

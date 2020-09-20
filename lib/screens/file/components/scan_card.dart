@@ -9,7 +9,7 @@ class ScanCard extends StatelessWidget {
     @required this.scan, this.index,
   }) : super(key: key);
 
-  final Scan scan;
+  final FileScan scan;
   final int index;
 
   @override

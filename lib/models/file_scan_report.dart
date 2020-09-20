@@ -2,7 +2,7 @@ import 'package:virus_total_api/models/file_scan.dart';
 
 class FileScanReport {
   FileScanReport({
-    this.scans,
+    this.filescans,
     this.scanId,
     this.sha1,
     this.resource,
@@ -16,23 +16,22 @@ class FileScanReport {
     this.md5,
   });
 
-  Map<String, Scan> scans;
-  String scanId;
-  String sha1;
-  String resource;
-  int responseCode;
-  DateTime scanDate;
-  String permalink;
-  String verboseMsg;
-  int total;
-  int positives;
-  String sha256;
-  String md5;
+  final Map<String, FileScan> filescans;
+  final String scanId;
+  final String sha1;
+  final String resource;
+  final int responseCode;
+  final DateTime scanDate;
+  final String permalink;
+  final String verboseMsg;
+  final int total;
+  final int positives;
+  final String sha256;
+  final String md5;
 
   factory FileScanReport.fromJson(Map<String, dynamic> json) => FileScanReport(
-    scans: Map.from(json["scans"]).map((k, v) {
-        return MapEntry<String, Scan>(k, Scan.fromJson(k,v));
-    }),
+    filescans: Map.from(json["scans"]).map((k, v) =>
+      MapEntry<String, FileScan>(k, FileScan.fromJson(k,v))),
     scanId: json["scan_id"],
     sha1: json["sha1"],
     resource: json["resource"],
@@ -47,7 +46,7 @@ class FileScanReport {
   );
 
   Map<String, dynamic> toJson() => {
-    "scans": Map.from(scans).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
+    "scans": Map.from(filescans).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
     "scan_id": scanId,
     "sha1": sha1,
     "resource": resource,
