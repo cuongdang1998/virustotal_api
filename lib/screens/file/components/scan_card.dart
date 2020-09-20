@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:virus_total_api/models/file_scan.dart';
 
-import '../../constants.dart';
-import '../../size_config.dart';
+import '../../../constants.dart';
+import '../../../size_config.dart';
 class ScanCard extends StatelessWidget {
   const ScanCard({
     Key key,

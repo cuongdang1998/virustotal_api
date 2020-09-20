@@ -17,7 +17,7 @@ class FetchFileScanReport{
         var a=FileScanReport.fromJson(response.data);
         return a;
       }else{
-        throw('Response error');
+        throw('Response error in fetchFileScanReport');
       }
     }catch(ex){
       print("Error in fetchFileScanReport "+ex.toString());

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:virus_total_api/models/file_scan.dart';
-import 'package:virus_total_api/screens/file/scan_card.dart';
+import 'package:virus_total_api/screens/file/components/scan_card.dart';
 
-import '../../size_config.dart';
+import '../../../size_config.dart';
 
 class ScanCardList extends StatelessWidget {
   const ScanCardList({

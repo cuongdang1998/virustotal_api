@@ -1,19 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:virus_total_api/bloc/events/scan_event.dart';
+import 'package:virus_total_api/bloc/events/file_scan_event.dart';
 import 'package:virus_total_api/services/fetch_file_scan_report.dart';
-import 'package:virus_total_api/bloc/states/scan_state.dart';
+import 'package:virus_total_api/bloc/states/file_scan_state.dart';
 
-class ScanFileBloc extends Bloc<ScanEvent,ScanState>{
+class ScanFileBloc extends Bloc<FileScanEvent,FileScanState>{
 
   FetchFileScanReport _scanReport=FetchFileScanReport();
 
-  ScanFileBloc(ScanState initialState) : super(initialState);
+  ScanFileBloc(FileScanState initialState) : super(initialState);
   @override
-  Stream<ScanState> mapEventToState(ScanEvent event) async*{
+  Stream<FileScanState> mapEventToState(FileScanEvent event) async*{
     try{
       final scans= await _scanReport.fetchFileScanList();
       var currentState= state;
-      if(event is FetchScanReportEvent){
+      if(event is FetchFileScanReportEvent){
         try {
           if (currentState is InitialScanState) {
             yield SucceededScanState(scans: scans);

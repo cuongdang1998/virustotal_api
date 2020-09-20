@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:virus_total_api/bloc/blocs/scan_bloc_file.dart';
-import 'package:virus_total_api/bloc/events/scan_event.dart';
+import 'package:virus_total_api/bloc/blocs/file_scan_bloc.dart';
+import 'package:virus_total_api/bloc/events/file_scan_event.dart';
 import 'package:virus_total_api/screens/components/input_container.dart';
 import 'package:virus_total_api/screens/components/title_text.dart';
-import 'package:virus_total_api/screens/file/scan_card_list.dart';
+import 'package:virus_total_api/screens/file/components/scan_card_list.dart';
 import 'package:virus_total_api/services/fetch_file_scan_report.dart';
 import 'package:virus_total_api/size_config.dart';
-import 'package:virus_total_api/bloc/states/scan_state.dart';
+import 'package:virus_total_api/bloc/states/file_scan_state.dart';
 
 class Body extends StatefulWidget {
   @override
@@ -68,7 +68,7 @@ class _BodyState extends State<Body> {
                           );
                         }else{
                           FetchFileScanReport.resource=text;
-                          _scanfilebloc.add(FetchScanReportEvent());
+                          _scanfilebloc.add(FetchFileScanReportEvent());
                           //ScanFileBloc(InitialScanState());
                         }
                       },
@@ -80,7 +80,7 @@ class _BodyState extends State<Body> {
                 padding: EdgeInsets.symmetric(horizontal: defaultSize*2.0, vertical: defaultSize*1.0),
                 child: TitleText(title: "File Scan Report",),
               ),
-              BlocBuilder<ScanFileBloc, ScanState>(
+              BlocBuilder<ScanFileBloc, FileScanState>(
                   builder: (context, state){
                     print(state);
                     var currentState=state;
@@ -133,4 +133,5 @@ class _BodyState extends State<Body> {
       ),
     );
   }
+
 }
