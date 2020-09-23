@@ -3,7 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:virus_total_api/bloc/blocs/file_scan_bloc.dart';
 import 'package:virus_total_api/bloc/events/file_scan_event.dart';
+import 'package:virus_total_api/screens/components/alert_dialog.dart';
 import 'package:virus_total_api/screens/components/input_container.dart';
+import 'package:virus_total_api/screens/components/loading.dart';
+import 'package:virus_total_api/screens/components/output_text.dart';
 import 'package:virus_total_api/screens/components/title_text.dart';
 import 'package:virus_total_api/screens/file/components/scan_card_list.dart';
 import 'package:virus_total_api/services/fetch_file_scan_report.dart';
@@ -23,7 +26,6 @@ class _BodyState extends State<Body> {
   void initState() {
     super.initState();
     _scanfilebloc=BlocProvider.of<ScanFileBloc>(context);
-    //_scanbloc.add(FetchScanReportEvent());
   }
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class _BodyState extends State<Body> {
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: defaultSize*2.0, vertical: defaultSize*1.0),
-                child: TitleText(title: "Input your file",),
+                child: TitleText(title: "Input Your File",),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: defaultSize*2, vertical: defaultSize),
@@ -51,13 +53,19 @@ class _BodyState extends State<Body> {
                         if(text=="" || text==null){
                           Scaffold.of(context).showSnackBar(
                               SnackBar(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(defaultSize*2),
+                                    topRight: Radius.circular(defaultSize*2)
+                                  )
+                                ),
                                 duration: Duration(seconds: 1),
-                                backgroundColor: Colors.blue,
+                                backgroundColor: Colors.blue.withOpacity(.8),
                                 content: ListTile(
-                                  leading: Icon(Icons.warning, color: Colors.white,),
-                                  title: Text("Please input your file !",
+                                  leading: Icon(Icons.warning, color: Colors.white, size: defaultSize*3,),
+                                  title: Text("Hey man, please input your file !",
                                     overflow: TextOverflow.ellipsis,
-                                    //maxLines: 2,
+                                    maxLines: 2,
                                     style: TextStyle(
                                         color: Colors.white, fontWeight: FontWeight.bold, fontSize: defaultSize*1.8
                                     ),
@@ -82,48 +90,25 @@ class _BodyState extends State<Body> {
               ),
               BlocBuilder<ScanFileBloc, FileScanState>(
                   builder: (context, state){
-                    print(state);
                     var currentState=state;
-                    if(currentState is InitialScanState){
-                      print(currentState);
-                      return Center(child: Image.asset("assets/gif/spinner.gif"),);
+                    // Trạng thái ban đầu
+                    if(currentState is InitialFileScanState){
+                      return OutputText(text: "Please input your file resource !",);
                     }
-                    if(currentState is SucceededScanState){
-                      print(currentState);
+                    //Loading chờ dữ liệu
+                    if(currentState is LoadingFileScanState){
+                      return LoadingWidget(imageloading:"assets/gif/spinner.gif");
+                    }
+                    //Fetch dữ liệu thành công
+                    if(currentState is SucceededFileScanState){
                       if(currentState.scans.isEmpty)
-                        return Center(child: Text("NO detected file information"),);
+                        return OutputText(text: "Scan file information is empty",);
                       return ScanCardList(scans: currentState.scans);
                     }
-                    if(currentState is FailedScanState){
-                      print(currentState);
-                      return Center(
-                        child: Text("Please check your internet connection !\n"
-                            "Or your file input is NOT in dataset !"),
-                      );
-                      //AlertDialog(
-                      //       title: Text("Infomation", style: TextStyle(fontWeight: FontWeight.bold),),
-                      //       content: Text("Please check your internet connection !\n"
-                      //           "Or your file input is NOT in dataset !",
-                      //         style: TextStyle(fontSize: defaultSize*1.5),),
-                      //       contentPadding: EdgeInsets.symmetric(
-                      //           vertical: defaultSize*1.5, horizontal: defaultSize*4,
-                      //       ),
-                      //       actions: [
-                      //         Builder(
-                      //           builder: (context) {
-                      //             return FlatButton(
-                      //               onPressed: (){
-                      //                 Navigator.of(context, rootNavigator: false).pop();
-                      //               },
-                      //               child: Text("OK",
-                      //                 style: TextStyle(fontSize: defaultSize*2,
-                      //                     fontWeight: FontWeight.bold),
-                      //               ),
-                      //             );
-                      //           }
-                      //         )
-                      //       ],
-                      //     );
+                    //Lấy dữ liệu thất bại
+                    if(currentState is FailedFileScanState){
+                      return OutputText(text: "Please check your internet connection !\n"
+                          "Or your file input is NOT in dataset !",);
                     }
                   }
               )

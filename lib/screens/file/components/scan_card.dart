@@ -21,6 +21,22 @@ class ScanCard extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
           color: index.isEven ? Colors.white : kPrimaryColor,
+          gradient: index.isEven ? LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.white,
+                Colors.white,
+              ]
+          )  :
+          LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            colors: [
+              kPrimaryColor.withOpacity(.6),
+              kPrimaryColor
+            ]
+          ),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(

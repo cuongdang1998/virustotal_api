@@ -1,36 +1,46 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:virus_total_api/constants.dart';
+import 'package:virus_total_api/screens/comment/comment_screen.dart';
 import 'package:virus_total_api/screens/file/file_home_screen.dart';
 import 'package:virus_total_api/screens/url/url_screen.dart';
 
+import 'bloc/blocs/bloc_observer.dart';
+import 'models/nav_item.dart';
+
 void main() {
+  Bloc.observer= CommonBlocObserver();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Scan file app',
-      theme: ThemeData(
-        textTheme: GoogleFonts.dmSansTextTheme().apply(
-          displayColor: kTextColor
-        ),
-        appBarTheme: AppBarTheme(
+    return ChangeNotifierProvider(
+      create: (context) => NavItems(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Scan file app',
+        theme: ThemeData(
           textTheme: GoogleFonts.dmSansTextTheme().apply(
             displayColor: kTextColor
           ),
-          elevation: 0,
-          brightness: Brightness.light,
-          color: Colors.transparent
+          appBarTheme: AppBarTheme(
+            textTheme: GoogleFonts.dmSansTextTheme().apply(
+              displayColor: kTextColor
+            ),
+            elevation: 0,
+            brightness: Brightness.light,
+            color: Colors.transparent
+          ),
+          scaffoldBackgroundColor: Colors.white,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        scaffoldBackgroundColor: Colors.white,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+        home: CommentScreen(),
       ),
-      home: UrlScreen(),
     );
   }
 }

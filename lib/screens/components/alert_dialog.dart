@@ -14,6 +14,9 @@ showAlertDialogWithOneButton({BuildContext context,
 
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(size*2.3)
+    ),
     title: Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [

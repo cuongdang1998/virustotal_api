@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:virus_total_api/bloc/blocs/url_scan_bloc.dart';
+import 'package:virus_total_api/bloc/events/url_scan_event.dart';
+import 'package:virus_total_api/bloc/states/url_scan_state.dart';
 import 'package:virus_total_api/constants.dart';
-import 'package:virus_total_api/screens/components/alert_dialog.dart';
-import 'package:virus_total_api/screens/components/input_container.dart';
+import 'package:virus_total_api/screens/components/loading.dart';
+import 'package:virus_total_api/screens/components/output_text.dart';
 import 'package:virus_total_api/screens/components/title_text.dart';
-import 'package:virus_total_api/services/fetch_file_scan_report.dart';
-import 'package:virus_total_api/services/fetch_url_scan_report.dart';
-import 'package:virus_total_api/services/push_url_scan.dart';
+import 'package:virus_total_api/screens/url/components/url_scan_card.dart';
 
 import '../../../size_config.dart';
+import 'input_and_scan_button.dart';
 class Body extends StatefulWidget {
   @override
   _BodyState createState() => _BodyState();
@@ -15,80 +18,90 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   var urlTextController=TextEditingController();
+  UrlScanBloc _urlScanBloc;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _urlScanBloc=BlocProvider.of<UrlScanBloc>(context);
+
+  }
   @override
   Widget build(BuildContext context) {
     var defaultSize=SizeConfig.defaultSize;
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal:defaultSize*2, vertical: defaultSize),
-            child: TitleText(title: "Input Your URL",),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: defaultSize*2, vertical: defaultSize),
-            child: InputAndScanButton(urlTextController: urlTextController),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal:defaultSize*2, vertical: defaultSize),
-            child: TitleText(title: "Scan URL Report",),
-          ),
-
-        ],
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal:defaultSize*2, vertical: defaultSize),
+              child: TitleText(title: "Input Your URL",),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: defaultSize*2, vertical: defaultSize),
+              child: InputAndScanButton(urlTextController: urlTextController,
+                scanBloc: _urlScanBloc,
+              ),
+            ),
+            Divider(thickness: 2, color: kPrimaryColor.withOpacity(.2),),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal:defaultSize*2, vertical: defaultSize*2),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TitleText(title: "Scan URL Report",),
+                  BlocBuilder<UrlScanBloc, UrlScanState>(
+                      builder:(context,currentState) {
+                        if(currentState is SucceedScanUrlState){
+                          return TitleText(title:"${currentState.urlScanReport.total}");
+                        }else{
+                          return TitleText(title:"0");
+                        }
+                      }
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: defaultSize*2, right: defaultSize*2, bottom: defaultSize*2),
+              child: BlocBuilder<UrlScanBloc, UrlScanState>(
+                 builder:(context, currentstate) {
+                   if(currentstate is InitialScanUrlState){
+                     return OutputText(text: "Please input your URL!",);
+                   }
+                   if(currentstate is LoadingScanUrlState){
+                     return LoadingWidget(imageloading: "assets/gif/ripple.gif",);
+                   }
+                   if(currentstate is SucceedScanUrlState){
+                     if(currentstate.urlScan.isEmpty){
+                       return OutputText(text:"Scan information is empty !");
+                     }
+                     return GridView.builder(
+                         shrinkWrap: true,
+                         physics: NeverScrollableScrollPhysics(),
+                         itemCount: currentstate.urlScan.length,
+                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                             crossAxisCount: SizeConfig.orientation ==
+                                 Orientation.landscape ? 2 : 1,
+                             childAspectRatio: 2.1,
+                             mainAxisSpacing: defaultSize * 2,
+                             crossAxisSpacing: defaultSize * 2
+                         ),
+                         itemBuilder: (context, index) => UrlScanCard(urlScan:currentstate.urlScan[index])
+                     );
+                   }
+                   if(currentstate is FailedScanUrlState){
+                     return OutputText(text: "Please check your internet connection\n"
+                         "Or your input url is not in the dataset",);
+                   }
+                 }
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 }
 
-class InputAndScanButton extends StatelessWidget {
-  const InputAndScanButton({
-    Key key,
-    @required this.urlTextController,
-  }) : super(key: key);
-
-  final TextEditingController urlTextController;
-  @override
-  Widget build(BuildContext context) {
-    var defaultSize=SizeConfig.defaultSize;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(child: InputContainer(hinttext: "Input url link", myController: urlTextController,)),
-        SizedBox(width: defaultSize,),
-        FlatButton(
-          onPressed: () async{
-            var text= urlTextController.text;
-            print(text);
-            if(text==""||text==null) {
-              showAlertDialogWithOneButton(
-                context: context,
-                title: "Input Url",
-                icon: Icons.report_problem,
-                content: "Please input the url you want to scan !",
-                buttontext: "OK",
-                size: defaultSize
-              );
-            }else{
-              FetchFileScanReport scanReport=FetchFileScanReport();
-              FetchFileScanReport.fileResource=text;
-              var a =await scanReport.fetchFileScanList();
-              // FetchUrlScanReport scanReport= FetchUrlScanReport();
-              // FetchUrlScanReport.urlResource=text;
-              // var a= await scanReport.fetchUrlScanList();
-              print(a);
-              //print(a[0].keyname);
-            }
-          },
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(defaultSize*2),
-          ),
-          color: kPrimaryColor,
-          child: Text("Scan",style: Theme.of(context).textTheme.headline6.copyWith(
-            fontWeight: FontWeight.bold,color: Colors.white
-          ),),
-        )
-      ],
-    );
-  }
-}

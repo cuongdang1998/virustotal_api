@@ -28,7 +28,7 @@ class FetchFileScanReport{
       var fileReport =await fetchFileScanReport();
       List<FileScan> list=List<FileScan>();
       for(var f in fileReport.filescans.values.toList()){
-            print(f.keyscan);
+            //print(f.keyscan);
             list.add(f);
           }
       return list;

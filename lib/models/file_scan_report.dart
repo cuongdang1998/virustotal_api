@@ -45,18 +45,18 @@ class FileScanReport {
     md5: json["md5"],
   );
 
-  Map<String, dynamic> toJson() => {
-    "scans": Map.from(filescans).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
-    "scan_id": scanId,
-    "sha1": sha1,
-    "resource": resource,
-    "response_code": responseCode,
-    "scan_date": scanDate.toIso8601String(),
-    "permalink": permalink,
-    "verbose_msg": verboseMsg,
-    "total": total,
-    "positives": positives,
-    "sha256": sha256,
-    "md5": md5,
-  };
+  // Map<String, dynamic> toJson() => {
+  //   "scans": Map.from(filescans).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
+  //   "scan_id": scanId,
+  //   "sha1": sha1,
+  //   "resource": resource,
+  //   "response_code": responseCode,
+  //   "scan_date": scanDate.toIso8601String(),
+  //   "permalink": permalink,
+  //   "verbose_msg": verboseMsg,
+  //   "total": total,
+  //   "positives": positives,
+  //   "sha256": sha256,
+  //   "md5": md5,
+  // };
 }

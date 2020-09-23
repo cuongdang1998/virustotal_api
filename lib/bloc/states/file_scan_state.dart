@@ -6,11 +6,16 @@ abstract class FileScanState extends Equatable{
   @override
   List<Object> get props => [];
 }
-class InitialScanState extends FileScanState{
+class InitialFileScanState extends FileScanState{
 }
-class FailedScanState extends FileScanState{
+class LoadingFileScanState extends FileScanState{
 }
-class SucceededScanState extends FileScanState{
+class SucceededFileScanState extends FileScanState{
   final List<FileScan> scans;
-  SucceededScanState({this.scans});
+  SucceededFileScanState({this.scans});
+
+  @override
+  List<Object> get props => [scans];
+}
+class FailedFileScanState extends FileScanState{
 }

@@ -9,9 +9,10 @@ Future<int> pushUrlScan(String urlresource) async{
   final String url="https://www.virustotal.com/vtapi/v2/url/scan";
   final String keyApi="a4a74bd3c0849dc2fb20c713114a08d3baef20ff9ee43f321707824d79c2ec89";
   try{
-    dio.options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    dio.options.headers['content-Type'] = 'application/x-www-form-urlencoded';
     response= await dio.post(url,
-        data:{'apikey':keyApi, 'url':urlresource},);
+        data:{'apikey':keyApi, 'url':urlresource},
+    );
     if(response.statusCode==200){
       var a=PushUrlScan.fromJson(response.data);
       return a.responsecode;

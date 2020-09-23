@@ -9,17 +9,16 @@ class UrlScan extends Equatable{
   final String result;
 
   UrlScan({this.keyname, this.detected, this.result});
-  factory UrlScan.fromJson(String keyname, Map<String, dynamic> json){
-    return UrlScan(
+  factory UrlScan.fromJson(String keyname, Map<String, dynamic> json)=> UrlScan(
       keyname: keyname,
       detected: json["detected"],
       result: json["result"]
     );
-  }
-  Map<String, dynamic> toJson(){
-    return {
-      "detected": detected,
-      "result": result
-    };
-  }
+
+  // Map<String, dynamic> toJson(){
+  //   return {
+  //     "detected": detected,
+  //     "result": result
+  //   };
+  // }
 }

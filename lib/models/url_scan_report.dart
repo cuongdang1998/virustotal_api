@@ -6,6 +6,7 @@ class UrlScanReport extends Equatable{
   @override
   // TODO: implement props
   List<Object> get props => [];
+
   UrlScanReport({
     this.scanId,
     this.resource,
@@ -46,17 +47,17 @@ class UrlScanReport extends Equatable{
     urlScans: Map.from(json["scans"]).map((key, value)
     => MapEntry<String,UrlScan>(key, UrlScan.fromJson(key, value)))
   );
-  Map<String, dynamic> toJson() => {
-    "scan_id": scanId,
-    "resource": resource,
-    "url": url,
-    "response_code": responseCode,
-    "scan_date": scanDate.toIso8601String(),
-    "permalink": permalink,
-    "verbose_msg": verboseMsg,
-    "filescan_id": filescanId,
-    "positives": positives,
-    "total": total,
-    "scans": Map.from(urlScans).map((key, value) => MapEntry<String,dynamic>(key,value.toJson())),
-  };
+  // Map<String, dynamic> toJson() => {
+  //   "scan_id": scanId,
+  //   "resource": resource,
+  //   "url": url,
+  //   "response_code": responseCode,
+  //   "scan_date": scanDate.toIso8601String(),
+  //   "permalink": permalink,
+  //   "verbose_msg": verboseMsg,
+  //   "filescan_id": filescanId,
+  //   "positives": positives,
+  //   "total": total,
+  //   "scans": Map.from(urlScans).map((key, value) => MapEntry<String,dynamic>(key,value.toJson())),
+  // };
 }

@@ -23,12 +23,12 @@ class FileScan extends Equatable{
     update: json["update"],
   );
 
-  Map<String, dynamic> toJson() => {
-    "detected": detected,
-    "version": version == null ? null : version,
-    "result": result == null ? null : result,
-    "update": update,
-  };
+  // Map<String, dynamic> toJson() => {
+  //   "detected": detected,
+  //   "version": version == null ? null : version,
+  //   "result": result == null ? null : result,
+  //   "update": update,
+  // };
   @override
   String toString() {
     return "Name: ${this.keyscan} result: ${this.result} detected: ${this.detected} version ${this.version}";

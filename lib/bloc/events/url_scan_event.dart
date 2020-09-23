@@ -6,5 +6,4 @@ abstract class UrlScanEvent extends Equatable{
 class FetchUrlScanReportEvent extends UrlScanEvent{
   @override
   List<Object> get props => [];
-
 }

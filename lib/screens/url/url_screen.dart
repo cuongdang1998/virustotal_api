@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:virus_total_api/bloc/blocs/url_scan_bloc.dart';
+import 'package:virus_total_api/screens/components/my_bottom_nav_bar.dart';
 import 'package:virus_total_api/screens/url/components/body.dart';
 
 import '../../constants.dart';
@@ -11,7 +14,11 @@ class UrlScreen extends StatelessWidget {
     var size=MediaQuery.of(context).size;
     return Scaffold(
       appBar: buildAppBar(size, context),
-      body: Body(),
+      bottomNavigationBar: MyBottomNavBar(),
+      body: BlocProvider(
+        create: (context) => UrlScanBloc(),
+        child: Body()
+      ),
     );
   }
   AppBar buildAppBar(Size size, BuildContext context) {
@@ -25,7 +32,7 @@ class UrlScreen extends StatelessWidget {
       centerTitle: true,
       leading: IconButton(
         onPressed: (){},
-        icon: SvgPicture.asset("assets/icons/menu.svg", color: kTextColor, width: size.width*.08, ),
+        icon: SvgPicture.asset("assets/icons/menu.svg", color: kPrimaryColor, width: size.width*.08, ),
       ),
     );
   }

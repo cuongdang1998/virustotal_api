@@ -10,30 +10,39 @@ class ScanFileBloc extends Bloc<FileScanEvent,FileScanState>{
   ScanFileBloc(FileScanState initialState) : super(initialState);
   @override
   Stream<FileScanState> mapEventToState(FileScanEvent event) async*{
-    try{
-      final scans= await _scanReport.fetchFileScanList();
-      var currentState= state;
-      if(event is FetchFileScanReportEvent){
-        try {
-          if (currentState is InitialScanState) {
-            yield SucceededScanState(scans: scans);
-            return;
-          }
-          else if(currentState is SucceededScanState) {
-            yield SucceededScanState(scans: scans);
-          }else{
-            yield FailedScanState();
-          }
-
-        } catch(_){
-          yield FailedScanState();
+    switch(event.runtimeType){
+      case FetchFileScanReportEvent:
+        yield LoadingFileScanState();
+        try{
+          final scans= await _scanReport.fetchFileScanList();
+          yield SucceededFileScanState(scans: scans);
+        }catch(_){
+          yield FailedFileScanState();
         }
-      }else{
-        yield InitialScanState();
-      }
-    }catch(_){
-      yield FailedScanState();
     }
   }
 
+  // @override
+  // void onChange(Change<FileScanState> change) {
+  //   print(change);
+  //   super.onChange(change);
+  // }
+  //
+  // @override
+  // void onError(Object error, StackTrace stackTrace) {
+  //   print("${error}+${stackTrace}");
+  //   super.onError(error, stackTrace);
+  // }
+  //
+  // @override
+  // void onTransition(Transition<FileScanEvent, FileScanState> transition) {
+  //   print(transition);
+  //   super.onTransition(transition);
+  // }
+  //
+  // @override
+  // void onEvent(FileScanEvent event) {
+  //   print(event);
+  //   super.onEvent(event);
+  // }
 }
