@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:virus_total_api/bloc/blocs/comment_bloc.dart';
-import 'package:virus_total_api/bloc/states/comment_state.dart';
+import 'package:virus_total_api/bloc/bloc_export.dart';
 import 'package:virus_total_api/screens/comment/components/body.dart';
+import 'package:virus_total_api/screens/components/my_bottom_nav_bar.dart';
 import 'package:virus_total_api/screens/components/my_dawer.dart';
 
 import '../../constants.dart';
@@ -14,11 +14,12 @@ class CommentScreen extends StatelessWidget {
     SizeConfig().init(context);
     var size=MediaQuery.of(context).size;
     return Scaffold(
-      appBar: buildAppBar(context, size),
+      //appBar: buildAppBar(context, size),
       body: BlocProvider(
         create: (context) => CommentBloc(InitialGetCommentState()),
           child: Body()),
       drawer: MyDrawer(),
+      bottomNavigationBar: MyBottomNavBar(),
     );
   }
 

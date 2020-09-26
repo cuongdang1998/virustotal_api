@@ -9,6 +9,7 @@ abstract class UrlScanState extends Equatable{
 
 class InitialScanUrlState extends UrlScanState{}
 class LoadingScanUrlState extends UrlScanState{}
+//Scan state
 class SucceedScanUrlState extends UrlScanState{
   final UrlScanReport urlScanReport;
   final List<UrlScan> urlScan;

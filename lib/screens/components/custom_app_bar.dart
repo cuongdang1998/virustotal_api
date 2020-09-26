@@ -5,10 +5,12 @@ import '../../constants.dart';
 import '../../size_config.dart';
 class CustomAppBar extends StatelessWidget {
   const CustomAppBar({
-    Key key, this.text, this.icon,
+    Key key, this.text, this.icon, this.press, this.iconsize,
   }) : super(key: key);
   final String text;
   final String icon;
+  final Function press;
+  final double iconsize;
   @override
   Widget build(BuildContext context) {
     var defaultsize=SizeConfig.defaultSize;
@@ -18,12 +20,10 @@ class CustomAppBar extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: defaultsize),
           child: IconButton(
-            onPressed: (){
-              Navigator.pop(context);
-            },
+            onPressed: press,
             icon: SvgPicture.asset( icon,
-              color: kPrimaryColor,
-              height: defaultsize*1.5,
+              color: kTextColor,
+              height: iconsize,
             ),
           ),
         ),
@@ -31,7 +31,7 @@ class CustomAppBar extends StatelessWidget {
             child: Center(
               child: Text(text, style: TextStyle(
                   fontWeight: FontWeight.bold, fontSize: defaultsize*2.2,
-                  color: kPrimaryColor
+                  color: kTextColor
               )),
             )
         )

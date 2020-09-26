@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:virus_total_api/bloc/blocs/file_scan_bloc.dart';
-import 'package:virus_total_api/bloc/events/file_scan_event.dart';
-import 'package:virus_total_api/screens/components/alert_dialog.dart';
+import 'package:virus_total_api/bloc/bloc_export.dart';
+import 'package:virus_total_api/constants.dart';
 import 'package:virus_total_api/screens/components/input_container.dart';
 import 'package:virus_total_api/screens/components/loading.dart';
 import 'package:virus_total_api/screens/components/output_text.dart';
@@ -11,7 +10,6 @@ import 'package:virus_total_api/screens/components/title_text.dart';
 import 'package:virus_total_api/screens/file/components/scan_card_list.dart';
 import 'package:virus_total_api/services/fetch_file_scan_report.dart';
 import 'package:virus_total_api/size_config.dart';
-import 'package:virus_total_api/bloc/states/file_scan_state.dart';
 
 class Body extends StatefulWidget {
   @override
@@ -21,74 +19,82 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   ScanFileBloc _scanfilebloc;
   var defaultSize=SizeConfig.defaultSize;
-  final inputFileController = TextEditingController();
+  final _inputFileController = TextEditingController();
   @override
   void initState() {
     super.initState();
     _scanfilebloc=BlocProvider.of<ScanFileBloc>(context);
   }
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _inputFileController.dispose();
+    FetchFileScanReport.fileResource="";
+  }
+  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: defaultSize*2.0, vertical: defaultSize*1.0),
-                child: TitleText(title: "Input Your File",),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: defaultSize*2, vertical: defaultSize),
-                child: Row(
-                  children: [
-                    Expanded(child: InputContainer(hinttext: "Input file resource", myController: inputFileController,)),
-                    SizedBox(width: defaultSize/2,),
-                    IconButton(
-                      icon: SvgPicture.asset("assets/icons/scan.svg", width: defaultSize*2.5,),
-                      onPressed: (){
-                        var text=inputFileController.text;
-                        print(text);
-                        if(text=="" || text==null){
-                          Scaffold.of(context).showSnackBar(
-                              SnackBar(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(defaultSize*2),
-                                    topRight: Radius.circular(defaultSize*2)
-                                  )
-                                ),
-                                duration: Duration(seconds: 1),
-                                backgroundColor: Colors.blue.withOpacity(.8),
-                                content: ListTile(
-                                  leading: Icon(Icons.warning, color: Colors.white, size: defaultSize*3,),
-                                  title: Text("Hey man, please input your file !",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        color: Colors.white, fontWeight: FontWeight.bold, fontSize: defaultSize*1.8
-                                    ),
-
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: defaultSize*2.0, vertical: defaultSize*1.0),
+              child: TitleText(title: "Input Your File",),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: defaultSize*2, vertical: defaultSize),
+              child: Row(
+                children: [
+                  Expanded(child: InputContainer(hinttext: "Input file resource", myController: _inputFileController,)),
+                  SizedBox(width: defaultSize/2,),
+                  IconButton(
+                    icon: SvgPicture.asset("assets/icons/scan.svg", color: kTextColor, width: defaultSize*2.5,),
+                    onPressed: (){
+                      var input=_inputFileController.text;
+                      //print(text);
+                      if(input=="" || input==null){
+                        Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(defaultSize*2),
+                                  topRight: Radius.circular(defaultSize*2)
+                                )
+                              ),
+                              duration: Duration(seconds: 1),
+                              backgroundColor: Colors.blue.withOpacity(.8),
+                              content: ListTile(
+                                leading: Icon(Icons.warning, color: Colors.white, size: defaultSize*3,),
+                                title: Text("Hey man, please input your file !",
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                      color: Colors.white, fontWeight: FontWeight.bold, fontSize: defaultSize*1.8
                                   ),
+
                                 ),
-                              )
-                          );
-                        }else{
-                          FetchFileScanReport.fileResource=text;
-                          _scanfilebloc.add(FetchFileScanReportEvent());
-                          //ScanFileBloc(InitialScanState());
-                        }
-                      },
-                    ),
-                  ],
-                ),
+                              ),
+                            )
+                        );
+                      }else if(FetchFileScanReport.fileResource!=input){
+                        FetchFileScanReport.fileResource=input;
+                        _scanfilebloc.add(FetchFileScanReportEvent());
+                        //ScanFileBloc(InitialScanState());
+                      }
+                    },
+                  ),
+                ],
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: defaultSize*2.0, vertical: defaultSize*1.0),
-                child: TitleText(title: "File Scan Report",),
-              ),
-              BlocBuilder<ScanFileBloc, FileScanState>(
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: defaultSize*2.0, vertical: defaultSize*1.0),
+              child: TitleText(title: "File Scan Report",),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: defaultSize*2.0),
+              child: BlocBuilder<ScanFileBloc, FileScanState>(
                   builder: (context, state){
                     var currentState=state;
                     // Trạng thái ban đầu
@@ -111,9 +117,9 @@ class _BodyState extends State<Body> {
                           "Or your file input is NOT in dataset !",);
                     }
                   }
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );

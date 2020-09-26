@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:virus_total_api/bloc/blocs/url_scan_bloc.dart';
 import 'package:virus_total_api/bloc/events/url_scan_event.dart';
-import 'package:virus_total_api/models/file_scan.dart';
-import 'package:virus_total_api/models/url_scan.dart';
 import 'package:virus_total_api/screens/components/alert_dialog.dart';
 import 'package:virus_total_api/screens/components/input_container.dart';
-import 'package:virus_total_api/services/fetch_url_scan_report.dart';
-import 'package:virus_total_api/services/push_url_scan.dart';
+import 'package:virus_total_api/services/url_scan_service.dart';
 
 import '../../../constants.dart';
 import '../../../size_config.dart';
@@ -28,10 +25,9 @@ class InputAndScanButton extends StatelessWidget {
         Expanded(child: InputContainer(hinttext: "Input url link", myController: urlTextController,)),
         SizedBox(width: defaultSize,),
         FlatButton(
-          onPressed: () async{
-            var text= urlTextController.text;
-            print(text);
-            if(text==""||text==null) {
+          onPressed: (){
+            var input= urlTextController.text;
+            if(input==""||input==null) {
               showAlertDialogWithOneButton(
                   context: context,
                   title: "Input Url",
@@ -40,8 +36,8 @@ class InputAndScanButton extends StatelessWidget {
                   buttontext: "OK",
                   size: defaultSize
               );
-            }else{
-              FetchUrlScanReport.urlResource=text;
+            }else if(UrlScanService.urlResource!=input){
+              UrlScanService.urlResource=input;
               scanBloc.add(FetchUrlScanReportEvent());
             }
           },

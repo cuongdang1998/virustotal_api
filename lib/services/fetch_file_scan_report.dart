@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:virus_total_api/models/file_scan.dart';
 import 'package:virus_total_api/models/file_scan_report.dart';

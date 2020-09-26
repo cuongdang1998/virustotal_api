@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:virus_total_api/bloc/blocs/comment_bloc.dart';
-import 'package:virus_total_api/bloc/events/comment_event.dart';
-import 'package:virus_total_api/bloc/states/comment_state.dart';
+import 'package:virus_total_api/bloc/bloc_export.dart';
 import 'package:virus_total_api/screens/components/alert_dialog.dart';
 import 'package:virus_total_api/screens/components/custom_app_bar.dart';
 import 'package:virus_total_api/screens/components/flat_custom_button.dart';
@@ -11,8 +9,6 @@ import 'package:virus_total_api/screens/components/loading.dart';
 import 'package:virus_total_api/screens/components/output_text.dart';
 import 'package:virus_total_api/screens/components/title_text.dart';
 import 'package:virus_total_api/services/put_comment.dart';
-
-import '../../../constants.dart';
 import '../../../size_config.dart';
 
 class CreateCommentBody extends StatefulWidget {
@@ -21,18 +17,20 @@ class CreateCommentBody extends StatefulWidget {
 }
 
 class _CreateCommentBodyState extends State<CreateCommentBody> {
-  var resourceTextController=TextEditingController();
-  var commentTextController=TextEditingController();
+  var _resourceTextController=TextEditingController();
+  var _commentTextController=TextEditingController();
   CommentBloc _commentBloc;
+  var defaultsize=SizeConfig.defaultSize;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _commentBloc=BlocProvider.of<CommentBloc>(context);
+    PutComments.resource="";
+    PutComments.comment="";
   }
   @override
   Widget build(BuildContext context) {
-    var defaultsize=SizeConfig.defaultSize;
     return Stack(
       children: [
         GradientBackground(),
@@ -41,6 +39,10 @@ class _CreateCommentBodyState extends State<CreateCommentBody> {
             children: [
               CustomAppBar(icon: "assets/icons/arrow-long-left.svg",
                 text: "Create comments",
+                press: (){
+                  Navigator.pop(context);
+                },
+                iconsize: defaultsize*1.6,
               ),
               Expanded(
                 child: Padding(
@@ -54,14 +56,14 @@ class _CreateCommentBodyState extends State<CreateCommentBody> {
                         SizedBox(height: defaultsize,),
                         InputContainer(
                           hinttext: "Input resource",
-                          myController: resourceTextController,
+                          myController: _resourceTextController,
                         ),
                         SizedBox(height: defaultsize,),
                         TitleText(title:"Input comment"),
                         SizedBox(height: defaultsize,),
                         InputContainer(
                           hinttext: "Input comment",
-                          myController: commentTextController,
+                          myController: _commentTextController,
                           maxline: 4,
                         ),
                         SizedBox(height: defaultsize*2,),
@@ -69,11 +71,13 @@ class _CreateCommentBodyState extends State<CreateCommentBody> {
                             alignment: Alignment.center,
                             child: FlatCustomButton(buttontext: "Submit",
                               press: (){
-                                PutComments.resource=resourceTextController.text;
-                                PutComments.comment=commentTextController.text;
-                                if(PutComments.resource!="" && PutComments.comment!="" ){
+                                var resourceinput=_resourceTextController.text;
+                                var commentinput=_commentTextController.text;
+                                if(PutComments.resource!=resourceinput && PutComments.comment!=commentinput){
+                                  PutComments.resource=resourceinput;
+                                  PutComments.comment=commentinput;
                                   _commentBloc.add(PutCommentEvent());
-                                }else{
+                                }else if (resourceinput==""|| commentinput==""){
                                   showAlertDialogWithOneButton(
                                       content: "Please input file or url resource !\n"
                                           "And the comment you would like to post",
@@ -90,7 +94,7 @@ class _CreateCommentBodyState extends State<CreateCommentBody> {
                         BlocBuilder<CommentBloc,CommentState>(
                             builder: (context, currentstate){
                               if(currentstate is InitialPutCommentState){
-                                return Text("Input now");
+                                return OutputText(text: "Input everything and submit",);
                               }
                               else if(currentstate is LoadingPutCommentState){
                                 return LoadingWidget(imageloading: "assets/gif/ripple.gif",);

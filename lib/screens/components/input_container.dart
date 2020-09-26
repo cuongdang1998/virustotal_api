@@ -10,35 +10,49 @@ class InputContainer extends StatelessWidget {
   final String hinttext;
   final TextEditingController myController;
   final int maxline;
+
   @override
   Widget build(BuildContext context) {
-    var defaultSize=SizeConfig.defaultSize;
+    var defaultSize = SizeConfig.defaultSize;
     return Container(
-      padding: EdgeInsets.symmetric(vertical: defaultSize/10, horizontal: defaultSize),
+      padding: EdgeInsets.symmetric(
+          vertical: defaultSize / 10, horizontal: defaultSize),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(defaultSize*1.5),
+          borderRadius: BorderRadius.circular(defaultSize * 1.5),
           boxShadow: [
             BoxShadow(
-                offset: Offset(0,4),
+                offset: Offset(0, 4),
                 color: kTextColor.withOpacity(.1),
                 blurRadius: 20
             )
           ]
       ),
-      child: TextField(
-        controller: myController,
-        autofocus: true,
-        maxLines: maxline,
-        decoration: InputDecoration(
-            hintText: hinttext,
-            hintStyle: TextStyle(
-              fontSize: defaultSize*1.6
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: myController,
+              //autofocus: true,
+              maxLines: maxline,
+              decoration: InputDecoration(
+                hintText: hinttext,
+                hintStyle: TextStyle(
+                    fontSize: defaultSize * 1.6,
+                    color: kPrimaryColor.withOpacity(0.5)
+                ),
+                border: InputBorder.none,
+                suffixIcon: GestureDetector(
+                  onTap: () => myController.clear(),
+                  child: Icon(
+                      Icons.clear
+                  ),
+                )
+              ),
             ),
-            border: InputBorder.none,
-        ),
+          ),
+        ],
       ),
     );
   }
 }
-

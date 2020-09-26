@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:virus_total_api/bloc/events/comment_event.dart';
-import 'package:virus_total_api/bloc/states/comment_state.dart';
+import 'package:virus_total_api/bloc/bloc_export.dart';
 import 'package:virus_total_api/services/fetch_comments.dart';
 import 'package:virus_total_api/services/put_comment.dart';
 
@@ -16,6 +15,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState>{
         try{
           var comments=await fComments.fetchComments();
           yield SucceededGetCommentState(comments: comments);
+          print(state);
         }catch(_){
           yield FailedGetCommentState();
         }

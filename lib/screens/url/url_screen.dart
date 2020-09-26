@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:virus_total_api/bloc/blocs/url_scan_bloc.dart';
+import 'package:virus_total_api/bloc/bloc_export.dart';
 import 'package:virus_total_api/screens/components/my_bottom_nav_bar.dart';
+import 'package:virus_total_api/screens/components/my_dawer.dart';
 import 'package:virus_total_api/screens/url/components/body.dart';
 
 import '../../constants.dart';
@@ -13,7 +14,8 @@ class UrlScreen extends StatelessWidget {
     SizeConfig().init(context);
     var size=MediaQuery.of(context).size;
     return Scaffold(
-      appBar: buildAppBar(size, context),
+      //appBar: buildAppBar(size, context),
+      drawer: MyDrawer(),
       bottomNavigationBar: MyBottomNavBar(),
       body: BlocProvider(
         create: (context) => UrlScanBloc(),

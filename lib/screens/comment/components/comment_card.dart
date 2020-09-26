@@ -1,8 +1,6 @@
 
-
 import 'package:flutter/material.dart';
 import 'package:virus_total_api/models/comments.dart';
-
 import '../../../constants.dart';
 import '../../../size_config.dart';
 

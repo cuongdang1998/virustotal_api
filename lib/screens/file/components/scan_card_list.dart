@@ -12,12 +12,9 @@ class ScanCardList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var defaultSize=SizeConfig.defaultSize;
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: defaultSize*2),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(scans.length, (index) => ScanCard(scan: scans[index], index: index,)),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+        children: List.generate(scans.length, (index) => ScanCard(scan: scans[index], index: index,)),
     );
   }
 }

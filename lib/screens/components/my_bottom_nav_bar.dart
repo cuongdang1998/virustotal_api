@@ -19,6 +19,10 @@ class _MyBottomNavBarState extends State<MyBottomNavBar> {
         height: defaultsize*8,
         decoration: BoxDecoration(
           color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(defaultsize*3),
+            topRight: Radius.circular(defaultsize*3)
+          ),
           boxShadow: [
             BoxShadow(
               color: kTextColor.withOpacity(.1),
@@ -29,7 +33,7 @@ class _MyBottomNavBarState extends State<MyBottomNavBar> {
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List.generate(navItems.navlist.length, (index) =>
               buildNavBarItem(
                 icon: navItems.navlist[index].icon,
@@ -38,9 +42,10 @@ class _MyBottomNavBarState extends State<MyBottomNavBar> {
                 press: (){
                   if(navItems.selectedIndex!=index){
                     navItems.changNavIndex(index:  index);
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => navItems.navlist[index].targetScreen
-                    ));
+                    Navigator.pushNamed(context, navItems.navlist[index].targetScreen);
+                    // Navigator.push(context, MaterialPageRoute(
+                    //     builder: (context) => navItems.navlist[index].targetScreen
+                    // ));
                   }
                 }
               )
