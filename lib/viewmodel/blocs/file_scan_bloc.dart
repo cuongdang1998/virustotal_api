@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virus_total_api/services/fetch_file_scan_report.dart';
-import 'package:virus_total_api/bloc/bloc_export.dart';
+import 'package:virus_total_api/viewmodel/bloc_export.dart';
 class ScanFileBloc extends Bloc<FileScanEvent,FileScanState>{
 
   FetchFileScanReport _scanReport=FetchFileScanReport();

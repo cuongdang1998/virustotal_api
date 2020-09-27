@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:virus_total_api/bloc/blocs/url_scan_bloc.dart';
-import 'package:virus_total_api/bloc/events/url_scan_event.dart';
+import 'package:virus_total_api/viewmodel/blocs/url_scan_bloc.dart';
+import 'package:virus_total_api/viewmodel/events/url_scan_event.dart';
 import 'package:virus_total_api/screens/components/alert_dialog.dart';
 import 'package:virus_total_api/screens/components/input_container.dart';
 import 'package:virus_total_api/services/url_scan_service.dart';

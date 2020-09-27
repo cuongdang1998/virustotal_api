@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:virus_total_api/bloc/bloc_export.dart';
+import 'package:virus_total_api/viewmodel/bloc_export.dart';
+import 'package:virus_total_api/screens/components/loading.dart';
 import 'package:virus_total_api/screens/components/my_bottom_nav_bar.dart';
 import 'package:virus_total_api/screens/components/my_dawer.dart';
+import 'package:virus_total_api/screens/components/output_text.dart';
 import 'package:virus_total_api/screens/photos/components/body.dart';
+import 'package:virus_total_api/screens/photos/components/photo_card.dart';
 import 'package:virus_total_api/size_config.dart';
 
 import '../../constants.dart';
@@ -16,8 +19,15 @@ class PhotoScreen extends StatelessWidget {
     var _defaultsize=SizeConfig.defaultSize;
     return Scaffold(
       drawer: MyDrawer(),
-      body: BlocProvider(
-        create: (context) => PhotoBloc()..add(FetchPhotoEvent()),
+      body: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+                create: (context) => PhotoBloc()..add(FetchPhotoEvent()),
+            ),
+            BlocProvider(
+              create: (context) => LikeBloc(),
+            ),
+          ],
           child: Body()
       ),
       bottomNavigationBar: MyBottomNavBar(),
@@ -87,13 +97,29 @@ class DataSearch extends SearchDelegate<String>{
   @override
   Widget buildResults(BuildContext context) {
     //Show result based on the selection
-    return SizedBox();
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<PhotoBloc>(
+          create: (context) => PhotoBloc(),
+        ),
+        BlocProvider<LikeBloc>(
+          create: (context) => LikeBloc(),
+        )
+      ],
+      child: SearchPhotoWidget(query: query),
+    );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     //Show when someone searches for something
+    List<String> list=["People","Nature","See","Car","Beautiful girl"];
+    // return ListView.builder(
+    //   itemCount: list.length,
+    //     itemBuilder: (context, index) => Text(list[index])
+    // );
     return SizedBox();
+
   }
 
   @override
@@ -113,6 +139,52 @@ class DataSearch extends SearchDelegate<String>{
         ),
       ),
       //cursorColor: kTextColor
+    );
+  }
+}
+class SearchPhotoWidget extends StatefulWidget {
+  final String query;
+
+  const SearchPhotoWidget({Key key, this.query}) : super(key: key);
+  @override
+  _SearchPhotoWidgetState createState() => _SearchPhotoWidgetState();
+}
+
+class _SearchPhotoWidgetState extends State<SearchPhotoWidget> {
+  PhotoBloc _photoBloc;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _photoBloc=BlocProvider.of<PhotoBloc>(context);
+    _photoBloc.add(SearchEvent(query: widget.query));
+  }
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PhotoBloc, PhotoState>(
+      builder: (context, currentstate){
+        if(currentstate is LoadingSearchState){
+          return LoadingWidget(imageloading: "assets/gif/spinner.gif",);
+        }else if(currentstate is SucceedSearchState){
+          if(currentstate.photos.isEmpty){
+            return OutputText(text: "No photos match to the input",);
+          }
+          return GridView.builder(
+            itemCount: currentstate.photos.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: SizeConfig.orientation == Orientation.landscape ? 2:1,
+                crossAxisSpacing: SizeConfig.defaultSize,
+                mainAxisSpacing: SizeConfig.defaultSize,
+                childAspectRatio: 1
+              ),
+              itemBuilder: (context, index) => PhotoCard(photo: currentstate.photos[index],)
+          );
+        }else if(currentstate is FailSearchState){
+          return OutputText(text: "Please check your internet connection",);
+        }else{
+          return SizedBox();
+        }
+      },
     );
   }
 }

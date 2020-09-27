@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:virus_total_api/bloc/bloc_export.dart';
+import 'package:virus_total_api/viewmodel/bloc_export.dart';
 import 'package:virus_total_api/size_config.dart';
 class SeePhoto extends StatelessWidget {
   final int id;
-  const SeePhoto({Key key, this.id}) : super(key: key);
+  final String findtext;
+  const SeePhoto({Key key, this.id, this.findtext}) : super(key: key);
+
   static Widget of(BuildContext context) => context.ancestorWidgetOfExactType(SeePhoto);
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class SeePhoto extends StatelessWidget {
       ),
       body: BlocProvider(
         create: (context) => PhotoBloc(),
-        child: SeePhotoBody(id: id),
+        child: SeePhotoBody(id: id, findtext: findtext, ),
       ),
     );
   }
@@ -32,8 +34,9 @@ class SeePhoto extends StatelessWidget {
 
 class SeePhotoBody extends StatefulWidget {
   final int id;
+  final String findtext;
   const SeePhotoBody({
-    Key key, this.id,
+    Key key, this.id, this.findtext,
   }) : super(key: key);
 
   @override
@@ -52,8 +55,6 @@ class _SeePhotoBodyState extends State<SeePhotoBody> {
   }
   @override
   Widget build(BuildContext context) {
-    var a = SeePhoto.of(context);
-    print(a);
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
@@ -61,9 +62,19 @@ class _SeePhotoBodyState extends State<SeePhotoBody> {
             BlocBuilder<PhotoBloc,PhotoState>(
               builder: (context, currentState){
                 if(currentState is SucceedSeePhotoSate){
-                  return FadeInImage.assetNetwork(
-                      placeholder: "assets/gif/spinner.gif",
-                      image: currentState.photo.src.original
+                  return Center(
+                    child: Hero(
+                      tag: widget.id,
+                      child: FadeInImage.assetNetwork(
+                        fadeInCurve: Curves.bounceInOut,
+                          placeholder: "assets/gif/spinner.gif",
+                          image: currentState.photo.src.large,
+                        alignment: Alignment.center,
+                        height: SizeConfig.defaultSize*50,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   );
                 }else if(currentState is FailedSeePhotoSate){
                   return SizedBox();
@@ -71,7 +82,8 @@ class _SeePhotoBodyState extends State<SeePhotoBody> {
                   return SizedBox();
                 }
               },
-            )
+            ),
+            Text("${widget.findtext}")
           ],
         ),
       ),

@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:virus_total_api/bloc/bloc_export.dart';
+import 'package:virus_total_api/viewmodel/bloc_export.dart';
 import 'package:virus_total_api/services/url_scan_service.dart';
 
 class UrlScanBloc extends Bloc<UrlScanEvent,UrlScanState>{

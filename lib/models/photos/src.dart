@@ -6,11 +6,13 @@ class Src {
   final String portrait;
   final String landscape;
   final String tiny;
+  final String medium;
 
-  Src({this.original, this.large2x, this.large, this.small, this.portrait,
+  Src({this.medium,this.original, this.large2x, this.large, this.small, this.portrait,
       this.landscape, this.tiny});
   factory Src.fromJson(Map<String, dynamic> json){
     return Src(
+        medium: json['medium'],
         original: json['original'],
         large2x: json['large2x'],
         large: json['large'],

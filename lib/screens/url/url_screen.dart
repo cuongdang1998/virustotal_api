@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:virus_total_api/bloc/bloc_export.dart';
+import 'package:virus_total_api/viewmodel/bloc_export.dart';
 import 'package:virus_total_api/screens/components/my_bottom_nav_bar.dart';
 import 'package:virus_total_api/screens/components/my_dawer.dart';
 import 'package:virus_total_api/screens/url/components/body.dart';

@@ -14,3 +14,7 @@ export './blocs/url_scan_bloc.dart';
 export './events/photo_event.dart';
 export './states/photo_state.dart';
 export './blocs/photo_bloc.dart';
+//like export
+export './events/like_event.dart';
+export './states/like_state.dart';
+export './blocs/like_bloc.dart';

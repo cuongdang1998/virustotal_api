@@ -5,12 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:virus_total_api/constants.dart';
 import 'package:virus_total_api/fluro_router.dart';
-import 'package:virus_total_api/models/comments.dart';
-import 'package:virus_total_api/screens/comment/comment_screen.dart';
-import 'package:virus_total_api/screens/file/file_home_screen.dart';
-import 'package:virus_total_api/screens/photos/photo_screen.dart';
-import 'package:virus_total_api/screens/url/url_screen.dart';
-import 'bloc/blocs/bloc_observer.dart';
+import 'viewmodel/blocs/bloc_observer.dart';
 import 'models/nav_item.dart';
 
 void main() {

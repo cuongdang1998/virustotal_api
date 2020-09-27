@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:virus_total_api/bloc/bloc_export.dart';
+import 'package:virus_total_api/viewmodel/bloc_export.dart';
 import 'package:virus_total_api/services/fetch_photo.dart';
 
 class PhotoBloc extends Bloc<PhotoEvent, PhotoState>{
@@ -16,7 +16,8 @@ class PhotoBloc extends Bloc<PhotoEvent, PhotoState>{
           yield SucceedFetchPhotoState(photos: photos, hasReachedMax:  false);
         }
         if(currentState is SucceedFetchPhotoState){
-          final photos=await fetchPhoto(page++);
+          page++;
+          final photos=await fetchPhoto(page);
           yield photos.isEmpty ? currentState.copyWith(hasReachedMax: true):
               SucceedFetchPhotoState
                 (photos: currentState.photos+photos,
@@ -34,6 +35,15 @@ class PhotoBloc extends Bloc<PhotoEvent, PhotoState>{
         yield SucceedSeePhotoSate(photo: photo);
       }catch(_){
         yield FailedSeePhotoSate();
+      }
+    }
+    if(event is SearchEvent){
+      yield LoadingSearchState();
+      try{
+        var photos=await fetchSearchPhoto(event.query);
+        yield SucceedSearchState(photos: photos);
+      }catch(_){
+        yield FailSearchState();
       }
     }
   }

@@ -6,7 +6,7 @@ import 'package:virus_total_api/screens/components/my_bottom_nav_bar.dart';
 import 'package:virus_total_api/screens/components/my_dawer.dart';
 import 'package:virus_total_api/size_config.dart';
 import 'components/body.dart';
-import 'package:virus_total_api/bloc/bloc_export.dart';
+import 'package:virus_total_api/viewmodel/bloc_export.dart';
 class FileHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

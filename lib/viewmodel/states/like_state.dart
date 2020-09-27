@@ -1,0 +1,1 @@
+enum LikeState {LikedState, UnLikedState}

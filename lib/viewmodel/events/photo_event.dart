@@ -12,3 +12,8 @@ class SeePhotoEvent extends PhotoEvent{
 
   SeePhotoEvent({this.id});
 }
+class SearchEvent extends PhotoEvent{
+  final String query;
+
+  SearchEvent({this.query});
+}

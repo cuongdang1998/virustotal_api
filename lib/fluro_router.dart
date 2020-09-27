@@ -1,6 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:virus_total_api/bloc/bloc_export.dart';
+import 'package:virus_total_api/viewmodel/bloc_export.dart';
 import 'package:virus_total_api/screens/comment/comment_screen.dart';
 import 'package:virus_total_api/screens/comment/create_comment_screen.dart';
 import 'package:virus_total_api/screens/file/file_home_screen.dart';
@@ -42,6 +42,7 @@ class FluroRouter{
       handlerFunc: (BuildContext context, Map<dynamic, dynamic> param){
         return SeePhoto(
           id: int.parse(param['id'][0]),
+          findtext: param['findtext'][0],
         );
       }
   );
@@ -53,7 +54,7 @@ class FluroRouter{
     router.define('/photo', handler: photoHandler, transitionType: TransitionType.fadeIn);
     //Other Router
     router.define('/createcomment', handler: createCommentHandler, transitionType: TransitionType.fadeIn);
-    router.define('/seephoto/:id', handler: seePhotoHandler, transitionType: TransitionType.fadeIn);
+    router.define('/seephoto/:id/:findtext', handler: seePhotoHandler, transitionType: TransitionType.fadeIn);
 
   }
 }
