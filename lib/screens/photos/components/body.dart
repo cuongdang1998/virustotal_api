@@ -7,6 +7,84 @@ import 'package:virus_total_api/screens/components/output_text.dart';
 import 'package:virus_total_api/screens/photos/components/photo_card.dart';
 import 'package:virus_total_api/size_config.dart';
 
+class Body extends StatefulWidget {
+  @override
+  _BodyState createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
+  final _scrollController = ScrollController();
+  PhotoBloc _photoBloc;
+  bool isLoading=false;
+  @override
+  void initState(){
+    super.initState();
+    _scrollController.addListener((){
+      if(isLoading){
+        _photoBloc.add(FetchPhotoEvent());
+        isLoading=false;
+      }
+    });
+    _photoBloc=BlocProvider.of<PhotoBloc>(context);
+  }
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: BlocBuilder<PhotoBloc,PhotoState>(
+        cubit: _photoBloc,
+        builder: (context, currentState){
+          if(currentState is InitialPhotoState){
+            return SizedBox();
+          }
+          else if(currentState is SucceedFetchPhotoState){
+            if(currentState.photos.isEmpty){
+              return Center(child: OutputText(text: "No photos here",));
+            }
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: SizeConfig.defaultSize),
+              child: Scrollbar(
+                isAlwaysShown: true,
+                controller:  _scrollController,
+                child: GridView.builder(
+                    controller: _scrollController,
+                    shrinkWrap: true,
+                    //physics: NeverScrollableScrollPhysics(),
+                    itemCount: currentState.hasReachedMax ? currentState.photos.length : currentState.photos.length+1,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: SizeConfig.orientation ==Orientation.landscape ? 2:1,
+                        childAspectRatio: 1 ,
+                        mainAxisSpacing: SizeConfig.defaultSize,
+                        crossAxisSpacing: SizeConfig.defaultSize
+                    ),
+                    itemBuilder: (context, index) {
+                      if(index>=currentState.photos.length) {
+                        isLoading=true;
+                      }
+                      return isLoading ? BottomLoader():
+                      PhotoCard(photo: currentState.photos[index],);
+                    }
+                ),
+              ),
+            );
+          }
+          else if(currentState is FailedFetchPhotoState){
+            return Center(child: OutputText(text: "Can not get photos. Check intenet connection !",));
+          }else{
+            return SizedBox();
+          }
+        },
+      ),
+    );
+  }
+}
+
+//Sử dụng button load để call api
+
 // class Body extends StatefulWidget {
 //   @override
 //   _BodyState createState() => _BodyState();
@@ -91,77 +169,3 @@ import 'package:virus_total_api/size_config.dart';
 //     );
 //   }
 // }
-
-
-class Body extends StatefulWidget {
-  @override
-  _BodyState createState() => _BodyState();
-}
-
-class _BodyState extends State<Body> {
-  final _scrollController = ScrollController();
-  PhotoBloc _photoBloc;
-  bool isLoading=false;
-  @override
-  void initState(){
-    super.initState();
-    _scrollController.addListener((){
-      if(isLoading){
-        _photoBloc.add(FetchPhotoEvent());
-        isLoading=false;
-      }
-    });
-    _photoBloc=BlocProvider.of<PhotoBloc>(context);
-  }
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: BlocBuilder<PhotoBloc,PhotoState>(
-        builder: (context, currentState){
-          if(currentState is InitialFetchPhotoState){
-            return SizedBox();
-          }
-          if(currentState is SucceedFetchPhotoState){
-            if(currentState.photos.isEmpty){
-              return Center(child: OutputText(text: "No photos here",));
-            }
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: SizeConfig.defaultSize),
-              child: Scrollbar(
-                isAlwaysShown: true,
-                controller:  _scrollController,
-                child: GridView.builder(
-                  controller: _scrollController,
-                  shrinkWrap: true,
-                  //physics: NeverScrollableScrollPhysics(),
-                  itemCount: currentState.hasReachedMax ? currentState.photos.length : currentState.photos.length+1,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: SizeConfig.orientation ==Orientation.landscape ? 2:1,
-                      childAspectRatio: 1 ,
-                      mainAxisSpacing: SizeConfig.defaultSize,
-                      crossAxisSpacing: SizeConfig.defaultSize
-                  ),
-                  itemBuilder: (context, index) {
-                    if(index>=currentState.photos.length) {
-                      isLoading=true;
-                    }
-                    return isLoading ? BottomLoader():
-                  PhotoCard(photo: currentState.photos[index],);
-                  }
-                ),
-              ),
-            );
-          }
-          if(currentState is FailedFetchPhotoState){
-            return Center(child: OutputText(text: "Can not get photos. Check intenet connection !",));
-          }
-        },
-      ),
-    );
-  }
-}

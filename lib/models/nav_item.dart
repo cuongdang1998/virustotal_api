@@ -5,12 +5,6 @@ class NavItem{
   final String targetScreen;
 
   NavItem({this.icon, this.targetScreen});
-  // bool targetScreenChecker(){
-  //   if(targetScreen!=null){
-  //     return true;
-  //   }
-  //   return false;
-  // }
 }
 class NavItems with ChangeNotifier{
   int selectedIndex=0;

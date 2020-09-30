@@ -30,10 +30,10 @@ class _BodyState extends State<Body> {
     // TODO: implement dispose
     super.dispose();
     _inputFileController.dispose();
-    FetchFileScanReport.fileResource="";
   }
   @override
   Widget build(BuildContext context) {
+    FetchFileScanReport.fileResource="";
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(

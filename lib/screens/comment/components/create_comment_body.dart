@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:virus_total_api/screens/components/gradien_background.dart';
 import 'package:virus_total_api/viewmodel/bloc_export.dart';
 import 'package:virus_total_api/screens/components/alert_dialog.dart';
 import 'package:virus_total_api/screens/components/custom_app_bar.dart';
@@ -73,11 +74,11 @@ class _CreateCommentBodyState extends State<CreateCommentBody> {
                               press: (){
                                 var resourceinput=_resourceTextController.text;
                                 var commentinput=_commentTextController.text;
-                                if(PutComments.resource!=resourceinput && PutComments.comment!=commentinput){
+                                if(PutComments.resource!=resourceinput || PutComments.comment!=commentinput){
                                   PutComments.resource=resourceinput;
                                   PutComments.comment=commentinput;
                                   _commentBloc.add(PutCommentEvent());
-                                }else if (resourceinput==""|| commentinput==""){
+                                }else if (resourceinput=="" || commentinput==""){
                                   showAlertDialogWithOneButton(
                                       content: "Please input file or url resource !\n"
                                           "And the comment you would like to post",
@@ -107,7 +108,7 @@ class _CreateCommentBodyState extends State<CreateCommentBody> {
                                 return OutputText(text: "Please check your internet connection\n"
                                     "Or the server is busy now",);
                               }else {
-                                return Container(height: 0.0, width: 0.0,);
+                                return SizedBox();
                               }
                             }
                         ),
@@ -124,25 +125,3 @@ class _CreateCommentBodyState extends State<CreateCommentBody> {
   }
 }
 
-class GradientBackground extends StatelessWidget {
-  const GradientBackground({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.white.withOpacity(.1),
-                Colors.blue.withOpacity(.25),
-                Colors.blue.withOpacity(.5)
-              ]
-          )
-      ),
-    );
-  }
-}

@@ -9,7 +9,7 @@ abstract class PhotoState extends Equatable{
 }
 
 //Fetch photo
-class InitialFetchPhotoState extends PhotoState{}
+class InitialPhotoState extends PhotoState{}
 class SucceedFetchPhotoState extends PhotoState{
   final List<Photo> photos;
   final bool hasReachedMax;
@@ -36,11 +36,18 @@ class SucceedSeePhotoSate extends PhotoState{
 class FailedSeePhotoSate extends PhotoState{}
 
 //Fetch SearchPhoto photo list
-//class InitialSearchState extends PhotoState{}
 class LoadingSearchState extends PhotoState{}
 class SucceedSearchState extends PhotoState{
   final List<Photo> photos;
-
-  SucceedSearchState({this.photos});
+  final int totalresults;
+  final bool reachedPageMax;
+  SucceedSearchState({this.reachedPageMax, this.totalresults, this.photos});
 }
 class FailSearchState extends PhotoState{}
+//Load more search item
+// class SucceedSearchMoreState extends PhotoState{
+//   final List<Photo> photos;
+//   final String nextpage;
+//   SucceedSearchMoreState({this.nextpage, this.photos});
+// }
+// class FailSearchMoreState extends PhotoState{}

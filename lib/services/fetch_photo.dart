@@ -42,22 +42,35 @@ Future<Photo> getAPhoto(int photoid) async{
   }
 }
 //Search photo
-Future<List<Photo>> fetchSearchPhoto(String query) async{
+Future<SearchPhoto> fetchSearchPhoto(String query, int page) async{
   Dio _dio=Dio();
   Response _response;
   final String _apikey="563492ad6f91700001000001f48fd04f99974825a103752e21dc5839";
   _dio.options.headers["authorization"]=_apikey;
-  List<Photo> photos=List<Photo>();
   try{
-    _response= await _dio.get("https://api.pexels.com/v1/search?query=${query}&per_page=5");
+    _response= await _dio.get("https://api.pexels.com/v1/search?page=${page}&query=${query}&per_page=10");
     if(_response.statusCode==200){
       var photo= SearchPhoto.fromJson(_response.data);
-      for(var p in photo.photos){
-        photos.add(p);
-      }
-      return photos;
+      return photo;
     }
   }catch(exception){
     throw("Error in fetchPhotos=========" + exception.toString());
   }
 }
+//Search more on button next page
+// Future<SearchPhoto> fetchSearchPhotoNextPage(String nextPage) async{
+//   Dio _dio=Dio();
+//   Response _response;
+//   final String _apikey="563492ad6f91700001000001f48fd04f99974825a103752e21dc5839";
+//   _dio.options.headers["authorization"]=_apikey;
+//   try{
+//     _response= await _dio.get(nextPage);
+//     if(_response.statusCode==200){
+//       var searchphoto= SearchPhoto.fromJson(_response.data);
+//
+//       return searchphoto;
+//     }
+//   }catch(exception){
+//     throw("Error in fetchPhotos=========" + exception.toString());
+//   }
+// }

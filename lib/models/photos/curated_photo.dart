@@ -9,7 +9,6 @@ class CuratedPhoto extends Equatable{
     this.photos,
     this.nextPage,
   });
-
   final int page;
   final int perPage;
   final List<Photo> photos;

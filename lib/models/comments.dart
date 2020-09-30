@@ -14,7 +14,7 @@ class Comment extends Equatable{
   @override
   List<Object> get props => [];
 }
-class Comments{
+class Comments extends Equatable{
   final int responsecode;
   final String resource;
   final String verbosemsg;
@@ -29,4 +29,8 @@ class Comments{
       comments: (json['comments'] as List).map((e) => Comment.fromJson(e)).toList()
     );
   }
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [resource];
 }

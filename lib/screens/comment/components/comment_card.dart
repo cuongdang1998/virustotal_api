@@ -19,7 +19,7 @@ class CommentCard extends StatelessWidget {
         clipper: CommentClipper(),
         child: Container(
           padding: EdgeInsets.only(left: defaultsize, top: defaultsize,
-              bottom: defaultsize*2, right: defaultsize),
+              bottom: defaultsize*4, right: defaultsize),
           decoration: BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -43,8 +43,8 @@ class CommentCard extends StatelessWidget {
                   )),
                 ),
                 Text("${comment.commentcontent}",
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2, style: TextStyle(
+                  //overflow: TextOverflow.ellipsis,
+                  maxLines: 10, style: TextStyle(
                       fontSize: defaultsize*1.6
                   ),),
                 Align(

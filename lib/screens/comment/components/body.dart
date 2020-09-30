@@ -39,7 +39,7 @@ class _BodyState extends State<Body> {
   }
   @override
   Widget build(BuildContext context) {
-    var size=MediaQuery.of(context).size;
+    FetchComments.resource="";
     return Stack(
       children: [
         HeaderShapeColor(),
@@ -130,7 +130,7 @@ class _BodyState extends State<Body> {
                                   },)
                               );
                             }else if(currentState is FailedGetCommentState) {
-                              return OutputText(text: "Please check the internet connection",);
+                              return OutputText(text: "Please check the internet connection !\nOr your input is not correct",);
                             }else {
                               return Container(height: 0.0, width: 0.0,);
                             }

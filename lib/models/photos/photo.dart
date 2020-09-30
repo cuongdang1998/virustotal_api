@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:virus_total_api/models/photos/src.dart';
 
-class Photo {
+class Photo extends Equatable{
   final int id;
   final int width;
   final int height;
@@ -9,7 +10,7 @@ class Photo {
   final String photographerurl;
   final int photographerid;
   final Src src;
-  final bool liked;
+  bool liked;
 
   Photo({this.id, this.width, this.height, this.url, this.photographer,
       this.photographerurl, this.photographerid, this.src, this.liked});
@@ -23,7 +24,12 @@ class Photo {
       photographerurl: json['photographer_url'],
       photographerid: json['photographer_id'],
       src: Src.fromJson(json['src']),
-      liked: json['liked']
+      liked: json['liked'],
     );
   }
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [id];
+
 }
